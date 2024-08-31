@@ -102,7 +102,11 @@ def asfarray(X):
 
     """
     X = np.asanyarray(X)
-    return np.asfarray(X, dtype=X.dtype)
+    if np.issubdtype(X.dtype, np.floating) or np.issubdtype(X.dtype, np.complexfloating):
+        return np.asarray(X, X.dtype)
+    else:
+        return np.asarray(X, 'float64')
+
 
 def appropriate_complex_type_for(X):
     """Return an appropriate complex data type depending on the type of X. If X
@@ -113,11 +117,11 @@ def appropriate_complex_type_for(X):
     """
     X = asfarray(X)
 
-    if np.issubsctype(X.dtype, np.complex64) or np.issubsctype(X.dtype, np.complex128):
+    if np.issubdtype(X.dtype, np.complex64) or np.issubdtype(X.dtype, np.complex128):
         return X.dtype
-    elif np.issubsctype(X.dtype, np.float32):
+    elif np.issubdtype(X.dtype, np.float32):
         return np.complex64
-    elif np.issubsctype(X.dtype, np.float64):
+    elif np.issubdtype(X.dtype, np.float64):
         return np.complex128
 
     # God knows, err on the side of caution
